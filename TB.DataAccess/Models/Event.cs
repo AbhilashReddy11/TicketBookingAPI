@@ -19,5 +19,6 @@ namespace TB.DataAccess.Models
         public string Location { get; set; }
         public int AvailableSeats { get; set; }
         public double TicketPrice { get; set; }
+        public bool status { get; set; }
     }
 }

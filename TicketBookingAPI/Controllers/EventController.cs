@@ -8,6 +8,7 @@ using System.Net;
 using TB.DataAccess.Data;
 using TB.DataAccess.Models;
 using TB.DataAccess.Models.DTO;
+using TB.DataAccess.Repository;
 using TB.DataAccess.Repository.IRepository;
 
 namespace TicketBookingAPI.Controllers
@@ -17,16 +18,16 @@ namespace TicketBookingAPI.Controllers
     public class EventController : ControllerBase
     {
 
-        
+
         private readonly IMapper _mapper;
         protected APIResponse _response;
         private readonly IUnitOfWork _unitOfWork;
 
 
 
-        public EventController( IUnitOfWork unitOfWork, IMapper mapper)
+        public EventController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            
+
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _response = new();
@@ -40,7 +41,7 @@ namespace TicketBookingAPI.Controllers
         {
             try
             {
-               
+
                 IEnumerable<Event> eventList = await _unitOfWork.Event.GetAllAsync();
 
                 _response.Result = eventList;
@@ -72,7 +73,7 @@ namespace TicketBookingAPI.Controllers
                     return BadRequest(_response);
                 }
 
-               
+
                 var events = await _unitOfWork.Event.GetAsync(u => u.EventId == id);
                 if (events == null)
                 {
@@ -100,7 +101,7 @@ namespace TicketBookingAPI.Controllers
         {
             try
             {
-             
+
                 if (await _unitOfWork.Event.GetAsync(u => u.EventName.ToLower() == createDTO.EventName.ToLower()) != null)
                 {
                     ModelState.AddModelError("ErrorMessages", "Event already exists!");
@@ -113,7 +114,7 @@ namespace TicketBookingAPI.Controllers
                 }
 
                 Event events = _mapper.Map<Event>(createDTO);
-              
+
                 await _unitOfWork.Event.CreateAsync(events);
 
 
@@ -140,14 +141,14 @@ namespace TicketBookingAPI.Controllers
                     return BadRequest();
                 }
 
-            
+
                 var events = await _unitOfWork.Event.GetAsync(u => u.EventId == id);
                 if (events == null)
                 {
                     return NotFound();
                 }
 
-          
+
                 await _unitOfWork.Event.RemoveAsync(events);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
@@ -176,7 +177,7 @@ namespace TicketBookingAPI.Controllers
                 Event model = updateDTO;
 
 
-           
+
                 await _unitOfWork.Event.UpdateAsync(model);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
@@ -190,8 +191,58 @@ namespace TicketBookingAPI.Controllers
             return _response;
 
         }
+        [HttpPost("{id:int}")]
+        public async Task<ActionResult<APIResponse>> UpdateDataInDatabase(int id)
+        {
+
+            // Find the data from the database using the provided ID
+            var data = await _unitOfWork.Event.GetAsync(u => u.EventId == id);
+
+            if (data != null)
+            {
+
+                data.status = true;
+
+
+                await _unitOfWork.Event.SaveAsync();
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+
+
+            }
+            else
+            {
+
+                _response.IsSuccess = false;
+
+            }
+            return _response;
+
+        }
+        [HttpGet("GetStatusTrue/status=true")]
+        public async Task<ActionResult<APIResponse>> GetAll()
+        {
+            // Retrieve all items where status is true
+            List<Event> items = await _unitOfWork.Event.GetAllAsync();
+            List<Event> filteredItems = items.Where(x => x.status).ToList();
+
+
+            return Ok(filteredItems);
+        }
+        [HttpGet("GetStatusTrue/status=false")]
+        public async Task<ActionResult<APIResponse>> Getfalse()
+        {
+            // Retrieve all items where status is true
+            List<Event> items = await _unitOfWork.Event.GetAllAsync();
+            List<Event> filteredItems = items.Where(x => !x.status).ToList();
+
+
+            return Ok(filteredItems);
+        }
     }
 }
+
 
 
 

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using TB.DataAccess.Models;
 using TB.DataAccess.Repository.IRepository;
-using TicketBookingWeb.Models;
+
 
 namespace TicketBookingWeb.Areas.Customers.Controllers
 {
@@ -19,21 +19,25 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public  IActionResult Index()
-        {
-			List<Event> EventList = _unitOfWork.Event.GetAllAsync().Result;
-			return View(EventList);
-		}
+		//[HttpGet("status=true")]
+		public async Task<ActionResult<APIResponse>> Index()
+		{
+			// Retrieve all items where status is true
+			IEnumerable<Event> items = await _unitOfWork.Event.GetAllAsync();
+			IEnumerable<Event> filteredItems = items.Where(x => x.status).ToList();
 
-        public IActionResult Privacy()
+
+			return View(filteredItems);
+		}
+		public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
