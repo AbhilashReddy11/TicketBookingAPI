@@ -24,7 +24,7 @@ namespace TicketBookingAPI.Controllers
 
 
 
-        public EventController( IUnitOfWork unitOfWork, IMapper mapper, ApplicationDbContext db)
+        public EventController( IUnitOfWork unitOfWork, IMapper mapper)
         {
             
             _mapper = mapper;

@@ -1,0 +1,68 @@
+﻿@model TB.DataAccess.Models.Event
+<form asp-action="UpdateEvent">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Update Event</h1>
+        <hr />
+
+        <input hidden asp-for="EventId" />
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-2">
+                <label asp-for="EventName" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="EventDescription" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="EventDescription" class="form-control" />
+                <span asp-validation-for="EventDescription" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="EventDate" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="EventDate" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="EventDate" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Location" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="AvailableSeats" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="AvailableSeats" class="form-control" />
+                <span asp-validation-for="AvailableSeats" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="TicketPrice" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="TicketPrice" class="form-control" />
+                <span asp-validation-for="TicketPrice" class="text-danger"></span>
+            </div>
+
+            <div class="col-5 offset-2">
+                <a asp-action="IndexEvent" asp-controller="EventWeb" class="btn-primary btn form-control ">Back to List</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Update" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>

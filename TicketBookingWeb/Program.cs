@@ -1,14 +1,34 @@
 using TicketBookingWeb.Services.IServices;
 using TicketBookingWeb.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using TicketBookingAPI;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using TB.DataAccess.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using TicketBooking_Utility;
+using TB.DataAccess.Repository.IRepository;
+using TB.DataAccess.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
 
-// Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+//Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddHttpClient<IAuthService, AuthService>();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddHttpClient<IEventService, EventService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddRazorPages();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -19,13 +39,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 });
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromSeconds(300);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-}
-    );
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromSeconds(300);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//}
+//    );
 
 var app = builder.Build();
 
@@ -45,9 +70,10 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
-app.UseSession();
+//app.UseSession();
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customers}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

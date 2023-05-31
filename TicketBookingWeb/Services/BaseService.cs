@@ -46,10 +46,10 @@ namespace TicketBookingWeb.Services.IServices
                 }
 
                 HttpResponseMessage apiResponse = null;
-                if(!string.IsNullOrEmpty(apiRequest.Token))
-                {
-                    client.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("Bearer",apiRequest.Token);
-                }
+                //if(!string.IsNullOrEmpty(apiRequest.Token))
+                //{
+                //    client.DefaultRequestHeaders.Authorization=new AuthenticationHeaderValue("Bearer",apiRequest.Token);
+                //}
 
 
                 apiResponse = await client.SendAsync(message);

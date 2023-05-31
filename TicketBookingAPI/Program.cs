@@ -8,6 +8,7 @@ using TicketBookingAPI;
 using TB.DataAccess.Data;
 using TB.DataAccess.Repository;
 using TB.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
+
+
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 
 builder.Services.AddAuthentication(x =>
