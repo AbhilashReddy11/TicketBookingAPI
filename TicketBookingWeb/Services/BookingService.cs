@@ -1,33 +1,32 @@
-﻿
-
+﻿using TB.DataAccess.Models.DTO;
 using TB.DataAccess.Models;
-using TB.DataAccess.Models.DTO;
 using TicketBooking_Utility;
 using TicketBookingWeb.Models;
 using TicketBookingWeb.Services.IServices;
 
 namespace TicketBookingWeb.Services
 {
-    public class EventService : BaseService, IEventService
+    public class BookingService : BaseService, IBookingService
+    
     {
         private readonly IHttpClientFactory _clientFactory;
         private string EventUrl;
 
-        public EventService(IHttpClientFactory clientFactory, IConfiguration configuration) : base(clientFactory)
+        public BookingService(IHttpClientFactory clientFactory, IConfiguration configuration) : base(clientFactory)
         {
             _clientFactory = clientFactory;
             EventUrl = configuration.GetValue<string>("ServiceUrls:TicketBookingAPI");
 
         }
 
-        public Task<T> CreateAsync<T>(EventCreateDTO dto)
+        public Task<T> CreateWithoutAsync<T>(BookingCreateDTO dto)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.POST,
                 Data = dto,
-                Url = EventUrl + "/api/Event"
-         
+                Url = EventUrl + "/api/Booking"
+
 
             });
         }
@@ -37,8 +36,8 @@ namespace TicketBookingWeb.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.DELETE,
-                Url = EventUrl + "/api/Event/" + id
-                
+                Url = EventUrl + "/api/Booking/" + id
+
             });
         }
 
@@ -47,7 +46,7 @@ namespace TicketBookingWeb.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.GET,
-                Url = EventUrl + "/api/Event"
+                Url = EventUrl + "/api/Booking"
             });
         }
 
@@ -56,45 +55,30 @@ namespace TicketBookingWeb.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.GET,
-                Url = EventUrl + "/api/Event/" + id
+                Url = EventUrl + "/api/Booking/" + id
 
             });
         }
 
-        public Task<T> UpdateAsync<T>(Event dto)
+        public Task<T> UpdateAsync<T>(Booking dto)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.PUT,
                 Data = dto,
-                Url = EventUrl + "/api/Event/" + dto.EventId
+                Url = EventUrl + "/api/Booking/" + dto.BookingId
 
-            }) ;
+            });
         }
-        public Task<T> UpdateStatusAsync<T>(int id)
+       
+        public Task<T> CreateAsync<T>(BookingCreateDTO dto)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = Class1.ApiType.POST,
-                Url = EventUrl + "/api/Event/" + id
+                Data = dto,
+                Url = EventUrl + "/api/Booking/newcreate"
 
-            });
-        }
-        public Task<T> GetAllTrueAsync<T>()
-        {
-            return SendAsync<T>(new APIRequest()
-            {
-                ApiType = Class1.ApiType.GET,
-                Url = EventUrl + "/api/Event/GetStatusTrue/status=true" 
-
-            });
-        }
-        public Task<T> GetAllFalseAsync<T>()
-        {
-            return SendAsync<T>(new APIRequest()
-            {
-                ApiType = Class1.ApiType.GET,
-                Url = EventUrl + "/api/Event/GetStatusFalse/status=false"
 
             });
         }

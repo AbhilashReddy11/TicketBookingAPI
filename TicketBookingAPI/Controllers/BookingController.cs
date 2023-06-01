@@ -6,10 +6,12 @@ using TB.DataAccess.Data;
 using TB.DataAccess.Models.DTO;
 using TB.DataAccess.Models;
 using TB.DataAccess.Repository.IRepository;
+using Azure;
+using TB.DataAccess.Repository;
 
 namespace TicketBookingAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Booking")]
     [ApiController]
     public class BookingController : ControllerBase
     {
@@ -127,38 +129,7 @@ namespace TicketBookingAPI.Controllers
             return _response;
         }
 
-        [HttpDelete("{id:int}")]
-
-        public async Task<ActionResult<APIResponse>> DeleteBooking(int id)
-        {
-            try
-            {
-                if (id == 0)
-                {
-                    return BadRequest();
-                }
-
-            
-                var booking = await _unitOfWork.Booking.GetAsync(u => u.BookingId == id);
-                if (booking == null)
-                {
-                    return NotFound();
-                }
-
-
-                await _unitOfWork.Booking.RemoveAsync(booking);
-                _response.StatusCode = HttpStatusCode.NoContent;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
-            }
-            return _response;
-
-        }
+      
         [HttpPut("{id:int}")]
         public async Task<ActionResult<APIResponse>> UpdateEvent(int id, [FromBody] Booking updateDTO)
         {
@@ -193,5 +164,90 @@ namespace TicketBookingAPI.Controllers
             return _response;
 
         }
+		[HttpPost("newcreate")]
+		public async Task<ActionResult<APIResponse>> Createnew([FromBody] BookingCreateDTO createDTO)
+		{
+			try
+			{
+
+
+				if (createDTO == null)
+				{
+					return BadRequest();
+				}
+
+				if (await _unitOfWork.Event.GetAsync(u => u.EventId == createDTO.EventId) == null)
+				{
+					ModelState.AddModelError("ErrorMessages", "EventId is invalid");
+					return BadRequest(ModelState);
+				}
+				var eventtoupdate = await _unitOfWork.Event.GetAsync(u => u.EventId == createDTO.EventId);
+                int available = eventtoupdate.AvailableSeats;
+                int updatedone = available - createDTO.NumberOfTickets;
+                if (updatedone < 0) {
+                    ModelState.AddModelError("ErrorMessages", "Insufficient tickets");
+                    return BadRequest(ModelState);
+                    //some exception
+                }
+                eventtoupdate.AvailableSeats = updatedone;
+               await _unitOfWork.Event.UpdateAsync(eventtoupdate);
+                //save event
+				Booking booking = _mapper.Map<Booking>(createDTO);
+
+				await _unitOfWork.Booking.CreateAsync(booking);
+
+
+				_response.Result = _mapper.Map<Booking>(booking);
+				_response.StatusCode = HttpStatusCode.OK;
+				return CreatedAtRoute("GetBooking", new { id = booking.EventId }, _response);
+			}
+			catch (Exception ex)
+			{
+				_response.IsSuccess = false;
+				_response.ErrorMessages = new List<string> { ex.ToString() };
+			}
+			return _response;
+		}
+        [HttpDelete("{id:int}")]
+
+        public async Task<ActionResult<APIResponse>> DeletecountBooking(int id)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    return BadRequest();
+                }
+
+
+                var booking = await _unitOfWork.Booking.GetAsync(u => u.BookingId == id);
+                int bookedtickets = booking.NumberOfTickets;
+                int eventid = booking.EventId;
+                var events = await _unitOfWork.Event.GetAsync(u => u.EventId == eventid);
+                int jstavailable = events.AvailableSeats;
+                int updatedseats = jstavailable + bookedtickets;
+                events.AvailableSeats = updatedseats;
+                await _unitOfWork.Event.UpdateAsync(events);
+
+                if (booking == null)
+                {
+                    return NotFound();
+                }
+
+
+                await _unitOfWork.Booking.RemoveAsync(booking);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
+
+        }
     }
+	
 }

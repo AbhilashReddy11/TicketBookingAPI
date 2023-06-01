@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using TB.DataAccess.Models;
 using TicketBooking_Utility;
 using TicketBookingWeb.Models;
 

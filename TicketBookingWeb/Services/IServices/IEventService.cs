@@ -13,6 +13,9 @@ namespace TicketBookingWeb.Services.IServices
         Task<T> CreateAsync<T>(EventCreateDTO dto);
         Task<T> UpdateAsync<T>(Event dto);
         Task<T> DeleteAsync<T>(int id);
+        Task<T> UpdateStatusAsync<T>(int id);
+        Task<T> GetAllTrueAsync<T>();
+        Task<T> GetAllFalseAsync<T>();
 
     }
 }

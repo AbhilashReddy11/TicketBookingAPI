@@ -181,14 +181,14 @@ namespace TicketBookingAPI.Controllers
                 await _unitOfWork.Event.UpdateAsync(model);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
-                return Ok(_response);
+                
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.ToString() };
             }
-            return _response;
+            return Ok( _response);
 
         }
         [HttpPost("{id:int}")]
@@ -223,22 +223,42 @@ namespace TicketBookingAPI.Controllers
         [HttpGet("GetStatusTrue/status=true")]
         public async Task<ActionResult<APIResponse>> GetAll()
         {
-            // Retrieve all items where status is true
-            List<Event> items = await _unitOfWork.Event.GetAllAsync();
-            List<Event> filteredItems = items.Where(x => x.status).ToList();
+            try
+            {
+                // Retrieve all items where status is true
+                List<Event> items = await _unitOfWork.Event.GetAllAsync();
+                List<Event> filteredItems = items.Where(x => x.status).ToList();
+                _response.Result = filteredItems;
 
 
-            return Ok(filteredItems);
+                _response.StatusCode = HttpStatusCode.OK;
+          
+
+
+               
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return Ok(_response);
+            //return Ok(filteredItems);
         }
-        [HttpGet("GetStatusTrue/status=false")]
+        [HttpGet("GetStatusFalse/status=false")]
         public async Task<ActionResult<APIResponse>> Getfalse()
         {
             // Retrieve all items where status is true
             List<Event> items = await _unitOfWork.Event.GetAllAsync();
             List<Event> filteredItems = items.Where(x => !x.status).ToList();
+            _response.Result = filteredItems;
 
 
-            return Ok(filteredItems);
+            _response.StatusCode = HttpStatusCode.OK;
+
+
+
+            return Ok(_response);
         }
     }
 }

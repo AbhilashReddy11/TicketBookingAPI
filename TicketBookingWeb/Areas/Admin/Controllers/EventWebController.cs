@@ -43,7 +43,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEvent(EventCreateDTO model)
         {
             if (ModelState.IsValid)
@@ -51,7 +51,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
                 var response = await _eventService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
-                    //TempData["success"] = "Event created";
+                    
 
                     return RedirectToAction(nameof(IndexEvent));
                 }
@@ -95,7 +95,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
 
             var response = await _eventService.DeleteAsync<APIResponse>(EventId);
 
-            //TempData["success"] = "Villa deleted";
+         
             return RedirectToAction(nameof(IndexEvent));
 
         }

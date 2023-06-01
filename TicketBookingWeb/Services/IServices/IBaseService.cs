@@ -1,4 +1,5 @@
-﻿using TicketBookingWeb.Models;
+﻿using TB.DataAccess.Models;
+using TicketBookingWeb.Models;
 
 namespace TicketBookingWeb.Services.IServices
 {

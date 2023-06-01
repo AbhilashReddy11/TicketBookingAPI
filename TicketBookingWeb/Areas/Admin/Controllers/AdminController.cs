@@ -1,79 +1,73 @@
 ﻿using AutoMapper;
 using Azure;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net;
 using TB.DataAccess.Models;
 using TB.DataAccess.Repository.IRepository;
+using TicketBookingWeb.Services.IServices;
 
 namespace TicketBookingWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class AdminController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        
+        private readonly IEventService _eventService;
 
 
 
-        public AdminController(IUnitOfWork unitOfWork, IMapper mapper)
+        public AdminController( IEventService eventService)
         {
 
-
-            _unitOfWork = unitOfWork;
+             _eventService= eventService;
+            
 
 
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+       
         [HttpGet("status=false")]
         public async Task<ActionResult<APIResponse>> Getfalse()
         {
-            // Retrieve all items where status is true
-            IEnumerable<Event> items = await _unitOfWork.Event.GetAllAsync();
-            IEnumerable<Event> filteredItems = items.Where(x => !x.status).ToList();
+         
+            var response = await _eventService.GetAllFalseAsync<APIResponse>();
+            List<Event> list = new();
+
+            list = JsonConvert.DeserializeObject<List<Event>>(Convert.ToString(response.Result));
 
 
-            return View(filteredItems);
+            return View(list);
+
+
         }
-        
+
         public async Task<ActionResult<APIResponse>> Approve(int EventId)
         {
 
-            // Find the data from the database using the provided ID
-            var data = await _unitOfWork.Event.GetAsync();
+          
 
-            if (data != null)
+            if (ModelState.IsValid)
             {
-
-                data.status = true;
+                var response = await _eventService.UpdateStatusAsync<APIResponse>(EventId);
+               
 
             }
-            await _unitOfWork.Event.SaveAsync();
+            return RedirectToAction(nameof(Getfalse));
 
-			return RedirectToAction(nameof(Getfalse));
-
-
-		}
+        }
 		
 
 		public async Task<ActionResult<APIResponse>> Reject(int EventId)
 		{
-		
-			
-
-				var events = await _unitOfWork.Event.GetAsync();
-				if (events == null)
-				{
-					return NotFound();
-				}
 
 
-				await _unitOfWork.Event.RemoveAsync(events);
-			return RedirectToAction(nameof(Getfalse));
+            var response = await _eventService.DeleteAsync<APIResponse>(EventId);
+
+
+            return RedirectToAction(nameof(Getfalse));
 
 
 
-		}
+        }
 	}
 }

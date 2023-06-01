@@ -7,6 +7,6 @@
         public string CustomerName { get; set; }
 
         public int NumberOfTickets { get; set; }
-        public DateTime BookingDate { get; set; }
+        //public DateTime BookingDate { get; set; }
     }
 }
