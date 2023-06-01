@@ -10,9 +10,12 @@
 		</div>
 	</div>
 
-	<table class="table">
+	<table id="tblData" class="table table-bordered table-striped" style="width:100%">
 		<thead>
 			<tr>
+				<th>
+					EventId
+				</th>
 				<th>
 					EventName
 				</th>
@@ -28,15 +31,13 @@
 				<th>
 					AvailableSeats
 				</th>
-				<th>
-					EventId
-				</th>
+				
 				<th>
 					TicketPrice
 				</th>
 				<th></th>
 			</tr>
-		</thead>
+		@*</thead>
 		<tbody>
 			@foreach (var item in Model)
 			{
@@ -54,7 +55,10 @@
 					</td>
 				</tr>
 			}
-		</tbody>
+		</tbody>*@
 	</table>
 
 </div>
+@section Scripts{
+	<script src="~/js/event.js"></script>
+}

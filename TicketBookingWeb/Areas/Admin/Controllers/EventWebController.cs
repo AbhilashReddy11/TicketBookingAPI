@@ -7,6 +7,7 @@ using TB.DataAccess.Models;
 using TB.DataAccess.Models.DTO;
 using TicketBooking_Utility;
 using TicketBookingWeb.Services.IServices;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace TicketBookingWeb.Areas.Admin.Controllers
 {
@@ -51,7 +52,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
                 var response = await _eventService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
-                    TempData["success"] = " Event succesfully successfully";
+                    TempData["success"] = " Event created successfully";
 
                     return RedirectToAction(nameof(IndexEvent));
                 }
@@ -81,24 +82,58 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
                 if (response != null && response.IsSuccess)
                 {
 
-                    //TempData["success"] = "Villa Updated";
+                    TempData["success"] = " Event updated successfully";
                     return RedirectToAction(nameof(IndexEvent));
                 }
             }
-            //TempData["error"] = "error";
+           
             return View(model);
         }
 
-
+        [HttpDelete]
         public async Task<IActionResult> DeleteEvent(int EventId)
         {
 
             var response = await _eventService.DeleteAsync<APIResponse>(EventId);
 
-         
+            TempData["success"] = " deleted updated successfully";
             return RedirectToAction(nameof(IndexEvent));
 
         }
+        #region API CALLS
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            List<Event> list = new();
+
+            var response = await _eventService.GetAllAsync<APIResponse>();
+            if (response != null && response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<Event>>(Convert.ToString(response.Result));
+            }
+          
+            return Json(new { data = list });
+        }
+
+
+        //[HttpDelete]
+        //public async Task<IActionResult> Delete(int? EventId)
+        //{
+            
+        //    var EventToBeDeleted = await _eventService.GetAsync<APIResponse>(EventId);
+        //    if (CompanyToBeDeleted == null)
+        //    {
+        //        return Json(new { success = false, message = "Error while deleting" });
+        //    }
+
+        //    _unitOfWork.Company.Remove(CompanyToBeDeleted);
+        //    _unitOfWork.Save();
+
+        //    return Json(new { success = true, message = "Delete Successful" });
+        //}
+
+        #endregion
 
     }
 }

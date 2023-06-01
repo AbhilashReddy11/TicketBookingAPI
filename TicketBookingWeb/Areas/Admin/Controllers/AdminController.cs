@@ -63,7 +63,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
 
 
             var response = await _eventService.DeleteAsync<APIResponse>(EventId);
-
+            TempData["success"] = "rejected";
 
             return RedirectToAction(nameof(Getfalse));
 
