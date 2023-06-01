@@ -142,7 +142,8 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
                 var response = await _bookingService.CreateAsync<APIResponse>(model.booking);
                 if (response != null && response.IsSuccess)
                 {
-                   
+                    TempData["success"] = " Ticked booked";
+
                     return RedirectToAction(nameof(Index));
                 }
                 else

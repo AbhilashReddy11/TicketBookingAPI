@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TicketBookingWeb.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
 </head>
 <body>
     <header>
@@ -36,18 +38,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Getfalse">Pendingevents</a>
                         </li>
-                     
+
                       
-                      
+
                     </ul>
                     <partial name="_LoginPartial" />
+                    
                 </div>
-                </div>
+                
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>

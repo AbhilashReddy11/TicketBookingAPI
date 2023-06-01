@@ -52,6 +52,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
                
 
             }
+            TempData["success"] = "Approved";
             return RedirectToAction(nameof(Getfalse));
 
         }

@@ -51,7 +51,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
                 var response = await _eventService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
-                    
+                    TempData["success"] = " Event succesfully successfully";
 
                     return RedirectToAction(nameof(IndexEvent));
                 }
