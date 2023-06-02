@@ -15,7 +15,7 @@ namespace TB.DataAccess.Models
         public int EventId { get; set; }
         public string EventName { get; set; }
         public string EventDescription { get; set; }
-        public DateTime EventDate { get; set; }
+        public DateTime? EventDate { get; set; }
         public string Location { get; set; }
         public int AvailableSeats { get; set; }
         public double TicketPrice { get; set; }

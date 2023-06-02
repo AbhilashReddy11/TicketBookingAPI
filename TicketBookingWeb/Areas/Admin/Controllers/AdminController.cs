@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
 using System.Net;
 using TB.DataAccess.Models;
 using TB.DataAccess.Repository.IRepository;
+using TicketBooking_Utility;
 using TicketBookingWeb.Services.IServices;
 
 namespace TicketBookingWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class AdminController : Controller
     {
         

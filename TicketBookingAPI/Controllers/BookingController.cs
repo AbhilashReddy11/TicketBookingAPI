@@ -170,8 +170,13 @@ namespace TicketBookingAPI.Controllers
 			try
 			{
 
+                if (await _unitOfWork.Booking.GetAsync(u => u.CustomerName == createDTO.CustomerName) != null)
+                {
+                    ModelState.AddModelError("ErrorMessages", "Customername already taken");
+                    return BadRequest(ModelState);
+                }
 
-				if (createDTO == null)
+                if (createDTO == null)
 				{
 					return BadRequest();
 				}

@@ -107,6 +107,11 @@ namespace TicketBookingAPI.Controllers
                     ModelState.AddModelError("ErrorMessages", "Event already exists!");
                     return BadRequest(ModelState);
                 }
+                if (createDTO.EventDate < DateTime.UtcNow.Date)
+                {
+                    ModelState.AddModelError("ErrorMessages", "Event date must be after the current date!");
+                    return BadRequest(ModelState);
+                }
 
                 if (createDTO == null)
                 {
@@ -181,14 +186,14 @@ namespace TicketBookingAPI.Controllers
                 await _unitOfWork.Event.UpdateAsync(model);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
-                
+
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.ToString() };
             }
-            return Ok( _response);
+            return Ok(_response);
 
         }
         [HttpPost("{id:int}")]
@@ -232,10 +237,10 @@ namespace TicketBookingAPI.Controllers
 
 
                 _response.StatusCode = HttpStatusCode.OK;
-          
 
 
-               
+
+
             }
             catch (Exception ex)
             {
@@ -245,20 +250,54 @@ namespace TicketBookingAPI.Controllers
             return Ok(_response);
             //return Ok(filteredItems);
         }
+		[HttpDelete("DeleteExpiredEvents")]
+		private async Task DeleteExpiredEvents()
+        {
+            // Get the current date
+            DateTime currentDate = DateTime.UtcNow.Date;
+
+            // Get the expired events
+            var expiredEvents = await _unitOfWork.Event.GetAllAsync(e => e.EventDate.HasValue && e.EventDate.Value < currentDate);
+
+            // Delete the expired events
+            foreach (var eventsss in expiredEvents)
+            {
+                await _unitOfWork.Event.RemoveAsync(eventsss);
+            }
+
+
+        }
         [HttpGet("GetStatusFalse/status=false")]
         public async Task<ActionResult<APIResponse>> Getfalse()
         {
-            // Retrieve all items where status is true
-            List<Event> items = await _unitOfWork.Event.GetAllAsync();
-            List<Event> filteredItems = items.Where(x => !x.status).ToList();
-            _response.Result = filteredItems;
 
 
-            _response.StatusCode = HttpStatusCode.OK;
+            try
+            {
+                // Delete expired events
+                await DeleteExpiredEvents();
+
+
+                List<Event> items = await _unitOfWork.Event.GetAllAsync();
+                List<Event> filteredItems = items.Where(x => !x.status).ToList();
+                _response.Result = filteredItems;
+
+
+                _response.StatusCode = HttpStatusCode.OK;
 
 
 
-            return Ok(_response);
+                return Ok(_response);
+            }
+
+
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString()
+    };
+            }
+            return _response;
         }
     }
 }

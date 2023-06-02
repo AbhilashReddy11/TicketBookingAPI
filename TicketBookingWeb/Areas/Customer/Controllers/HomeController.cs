@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Net;
@@ -16,23 +17,23 @@ using TicketBookingWeb.Services.IServices;
 
 namespace TicketBookingWeb.Areas.Customers.Controllers
 {
-    [Area("Customers")]
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         
-		private readonly IMapper _mapper;
+		
 		protected APIResponse _response;
         private readonly IEventService _eventService;
         private readonly IBookingService _bookingService;
 
 
 
-        public HomeController(ILogger<HomeController> logger,IMapper mapper, IBookingService bookingService,IEventService eventService)
+        public HomeController(ILogger<HomeController> logger, IBookingService bookingService,IEventService eventService)
         {
             _logger = logger;
           
-			_mapper = mapper;
+			
 			_response = new();
             _bookingService = bookingService;
 
@@ -40,15 +41,10 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
 
         }
 
-		//[HttpGet("status=true")]
+		
 		public async Task<ActionResult<APIResponse>> Index()
 		{
-            //// Retrieve all items where status is true
-            //IEnumerable<Event> items = await _unitOfWork.Event.GetAllAsync();
-            //IEnumerable<Event> filteredItems = items.Where(x => x.status).ToList();
-
-
-            //return View(filteredItems);
+           
             List<Event> list = new();
 		var data= await _eventService.GetAllTrueAsync<APIResponse>();
 			list = JsonConvert.DeserializeObject<List<Event>>(Convert.ToString(data.Result));
@@ -60,66 +56,17 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
         }
         [HttpGet]
 
-        public async Task<IActionResult> BookTicket(int id)
-
-		{
-            var events=await _eventService.GetAsync<APIResponse>(id);
-            Event model = JsonConvert.DeserializeObject<Event>(Convert.ToString(events.Result));
-
-
-            return View(model);
-		}
-		[HttpPost]
-		public async Task<ActionResult> BookTicket( [FromBody] BookingCreateDTO createDTO)
-		{
 
 
 
-            //if (createDTO == null)
-            //{
-            //	return BadRequest();
-            //}
 
-            //if (await _unitOfWork.Event.GetAsync(u => u.EventId == createDTO.EventId) == null)
-            //{
-            //	ModelState.AddModelError("ErrorMessages", "EventId is invalid");
-            //	return BadRequest(ModelState);
-            //}
-            //var eventtoupdate = await _unitOfWork.Event.GetAsync(u => u.EventId == createDTO.EventId);
-            //int available = eventtoupdate.AvailableSeats;
-            //int updatedone = available - createDTO.NumberOfTickets;
-            //if (updatedone < 0)
-            //{
-            //	//some exception
-            //}
-            //eventtoupdate.AvailableSeats = updatedone;
-            //await _unitOfWork.Event.UpdateAsync(eventtoupdate);
-            ////save event
-            //Booking booking = _mapper.Map<Booking>(createDTO);
-
-            //await _unitOfWork.Booking.CreateAsync(booking);
-            //return RedirectToAction(nameof(Index));
-         
-            if (ModelState.IsValid)
-            {
-                var response = await _bookingService.CreateAsync<APIResponse>(createDTO);
-
-                
-                    //TempData["success"] = "Event created";
-
-            
-            }
-
-
-                return RedirectToAction(nameof(Index));
-            }
-
+        [Authorize]
 
 
         public async Task<IActionResult> CreateVBooking()
         {
             BookingCreateVM bookingCreateVM = new();
-            var response = await _eventService.GetAllAsync<APIResponse>();
+            var response = await _eventService.GetAllTrueAsync<APIResponse>();
             if (response != null && response.IsSuccess)
             {
                 bookingCreateVM.EventList = JsonConvert.DeserializeObject<List<Event>>
@@ -134,7 +81,8 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
         }
      
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> CreateVBooking(BookingCreateVM model)
         {
             if (ModelState.IsValid)
@@ -180,8 +128,7 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
             }
             return NotFound();
         }
+		
 
-
-
-    }
+	}
 }

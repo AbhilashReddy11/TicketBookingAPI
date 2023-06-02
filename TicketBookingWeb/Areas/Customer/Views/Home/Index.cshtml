@@ -1,0 +1,42 @@
+﻿@model List<Event>
+
+<div class="">
+    @foreach (var events in Model)
+    {
+        <div class="" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;">
+            <div class="card">
+                <div class="card-body">
+                   
+                        <div class="">
+                            <div class="">
+                                <p class="text-center text-lg text-uppercase font-bold text-lg text-primary" style="font-size: 1.5rem;">@events.EventName</p>
+                                <p class="">by <b>@events.EventDate</b></p>
+                           
+                            </div>
+                            <div class="">
+                                <p class="">
+                                    TicketPrice:
+                                    <span >
+                                        @events.TicketPrice.ToString("c")
+                                    </span>
+                                </p>
+                            </div>
+
+                        <div class="">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-EventId="@events.EventId" class="btn btn-outline-primary"> Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+    }
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="col text-end pt-1">
+            @await Component.InvokeAsync("Countdown")
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-area="Customer" asp-controller="Home" asp-action="CreateVBooking" class="btn btn-outline-primary"> BookTickets</a>
+        </div>
+    </div>
+</div>

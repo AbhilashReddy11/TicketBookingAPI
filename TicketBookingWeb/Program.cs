@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using TicketBooking_Utility;
 using TB.DataAccess.Repository.IRepository;
 using TB.DataAccess.Repository;
+using TicketBookingWeb.ViewComponents;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddHttpClient<IBookingService, BookingService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEventRepository, EventRepository>(); 
+builder.Services.AddScoped<CountdownViewComponent>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddRazorPages();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
@@ -76,6 +79,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=Customers}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

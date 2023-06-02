@@ -12,16 +12,17 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace TicketBookingWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-   // [Authorize(Roles = SD.Role_Admin)]
+
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
     public class EventWebController : Controller
     {
         private readonly IEventService _eventService;
-        private readonly IMapper _mapper;
+   
 
-        public EventWebController(IEventService eventService, IMapper mapper)
+        public EventWebController(IEventService eventService)
         {
 
-            _mapper = mapper;
+            
             _eventService = eventService;
         }
         public async Task<IActionResult> IndexEvent()
@@ -117,21 +118,7 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
         }
 
 
-        //[HttpDelete]
-        //public async Task<IActionResult> Delete(int? EventId)
-        //{
-            
-        //    var EventToBeDeleted = await _eventService.GetAsync<APIResponse>(EventId);
-        //    if (CompanyToBeDeleted == null)
-        //    {
-        //        return Json(new { success = false, message = "Error while deleting" });
-        //    }
-
-        //    _unitOfWork.Company.Remove(CompanyToBeDeleted);
-        //    _unitOfWork.Save();
-
-        //    return Json(new { success = true, message = "Delete Successful" });
-        //}
+        
 
         #endregion
 

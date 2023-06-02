@@ -1,0 +1,41 @@
+﻿@model TimeSpan
+
+
+@if (Model != null)
+{
+    <div>
+        <h3>Countdown:</h3>
+        <div id="countdown">
+            <span id="days">@Model.Days</span> days
+            <span id="hours">@Model.Hours</span> hours
+            <span id="minutes">@Model.Minutes</span> minutes
+            <span id="seconds">@Model.Seconds</span> seconds
+        </div>
+    </div>
+}
+
+
+<script>
+    function updateCountdown(countdownTime) {
+        // Get the countdown element
+        var countdownElement = document.getElementById("countdown");
+
+        // Update the countdown every second
+        setInterval(function () {
+            countdownTime -= 1000; // Subtract 1 second from the remaining countdown time
+            var days = Math.floor(countdownTime / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((countdownTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((countdownTime % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((countdownTime % (1000 * 60)) / 1000);
+
+            // Update the countdown element
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours;
+            document.getElementById("minutes").innerText = minutes;
+            document.getElementById("seconds").innerText = seconds;
+        }, 1000);
+    }
+
+    // Call the updateCountdown function with the initial countdown time
+    updateCountdown(@Model.TotalMilliseconds);
+</script>
