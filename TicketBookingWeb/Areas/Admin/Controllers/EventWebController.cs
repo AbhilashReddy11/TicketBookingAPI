@@ -117,12 +117,23 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
             return Json(new { data = list });
         }
 
+		
+		//[HttpDelete]
+		//public async Task<IActionResult> DeleteEvent(int EventId)
+		//{
 
-        
+			
+		//	var Abc = await _eventService.DeleteAsync<APIResponse>(EventId);
 
-        #endregion
+		//	TempData["success"] = " deleted  successfully";
+		//	return RedirectToAction(nameof(IndexEvent));
 
-    }
+		//}
+
+
+		#endregion
+
+	}
 }
 
 

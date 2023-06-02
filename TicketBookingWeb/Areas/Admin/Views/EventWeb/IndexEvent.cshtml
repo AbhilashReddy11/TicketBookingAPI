@@ -16,6 +16,7 @@
 				<th>
 					EventId
 				</th>
+				
 				<th>
 					EventName
 				</th>
@@ -37,17 +38,18 @@
 				</th>
 				<th></th>
 			</tr>
-		@*</thead>
+		</thead>
 		<tbody>
 			@foreach (var item in Model)
 			{
 				<tr>
+					
 					<td>@item.EventName</td>
 					<td>@item.EventDescription</td>
 					<td>@((item.EventDate).ToString())</td>
 					<td>@item.Location</td>
 					<td>@(item.AvailableSeats.ToString())</td>
-					<td>@((item.EventId).ToString())</td>
+					
 					<td>@((item.TicketPrice).ToString("c"))</td>
 					<td>
 						<a asp-area="Admin" asp-controller="EventWeb" asp-action="UpdateEvent" asp-route-EventId="@item.EventId" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
@@ -55,10 +57,10 @@
 					</td>
 				</tr>
 			}
-		</tbody>*@
+		</tbody>
 	</table>
 
 </div>
-@section Scripts{
+@*@section Scripts{
 	<script src="~/js/event.js"></script>
-}
+}*@

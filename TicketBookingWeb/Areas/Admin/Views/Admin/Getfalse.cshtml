@@ -47,8 +47,8 @@
 					<td>@((item.EventId).ToString())</td>
 					<td>@((item.TicketPrice).ToString("c"))</td>
 					<td>
-						<a asp-area="Admin" asp-controller="Admin" asp-action="Approve" asp-route-EventId="@item.EventId" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
-						<a asp-area="Admin" asp-controller="Admin" asp-action="Reject" asp-route-EventId="@item.EventId" class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+						<a asp-area="Admin" asp-controller="Admin" asp-action="Approve" asp-route-EventId="@item.EventId" class="btn btn-success">Approve</a>
+						<a asp-area="Admin" asp-controller="Admin" asp-action="Reject" asp-route-EventId="@item.EventId" class="btn btn-danger">Reject</a>
 					</td>
 				</tr>
 			}
