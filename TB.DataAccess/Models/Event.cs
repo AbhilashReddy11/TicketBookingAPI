@@ -18,7 +18,7 @@ namespace TB.DataAccess.Models
         
         public string EventDescription { get; set; }
         
-        public DateTime? EventDate { get; set; }
+        public DateTime EventDate { get; set; }
         [StringLength(50, ErrorMessage = "Location must not exceed 50 characters")]
         public string Location { get; set; }
         [Range(0, 100, ErrorMessage = "Available Seats must be between 0 and 100")]
