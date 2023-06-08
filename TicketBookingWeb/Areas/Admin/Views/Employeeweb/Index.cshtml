@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TB.DataAccess.Models.Employee>
+<br />
+<div class="container p-4 border">
+	<div class="row pb-2">
+		<div class="col">
+			<h1 class="text-primary">Employeelist List</h1>
+		</div>
+		<div class="col text-end pt-1">
+			<a asp-area="Admin" asp-controller="Employeeweb" asp-action="CreateEmployee" class="btn btn-outline-primary"><i class="bi bi-file-plus"></i> Create New Event</a>
+		</div>
+	</div>
+
+	<table id="tblData" class="table table-bordered table-striped" style="width:100%">
+		<thead>
+			<tr>
+				
+				
+				<th>
+					EmployeeName
+				</th>
+				<th>
+					Phonenumber
+				</th>
+				
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.EmployeeName</td>
+					
+					<td>@((item.Phonenumber).ToString())</td>
+					
+					
+				</tr>
+			}
+		</tbody>
+	</table>
+
+</div>

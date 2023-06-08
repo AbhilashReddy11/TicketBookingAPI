@@ -14,6 +14,8 @@ namespace TB.DataAccess.Repository
         public IUserRepository User { get; private set; }
         public IEventRepository Event { get; private set; }
         public IBookingRepository Booking { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IEmployeeRepository Employee { get; private set; }
         public UnitOfWork(ApplicationDbContext db, IConfiguration configuration)
         {
             _db = db;
@@ -22,6 +24,8 @@ namespace TB.DataAccess.Repository
             User = new UserRepository(_db,configuration);
             Event = new EventRepository(_db);
            Booking = new BookingRepository(_db);
+            Employee = new EmployeeRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
         }
 
         }

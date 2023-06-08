@@ -136,6 +136,7 @@ namespace TicketBookingAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+     
 
         public async Task<ActionResult<APIResponse>> DeleteEvent(int id)
         {
@@ -167,6 +168,7 @@ namespace TicketBookingAPI.Controllers
             return _response;
 
         }
+        [Authorize (Roles="Admin")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<APIResponse>> UpdateEvent(int id, [FromBody] Event updateDTO)
         {

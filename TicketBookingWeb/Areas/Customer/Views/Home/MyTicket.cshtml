@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TB.DataAccess.Models.Booking>
+<br />
+<div class="container p-4 border">
+	<div class="row pb-2">
+		<div class="col">
+			<h1 class="text-primary">Events List</h1>
+		</div>
+		
+	</div>
+
+	<table  class="table table-bordered table-striped" style="width:100%">
+		<thead>
+			<tr>
+				
+				<th>
+					EventName
+				</th>
+				
+				<th>
+					EventDate
+				</th>
+				<th>
+					Location
+				</th>
+				<th>
+					No.of Tickets
+				</th>
+				
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var item in Model)
+		{
+		<tr>
+		<td>@item.events.EventName</td>
+
+		<td>@item.events.EventDate</td>
+		<td>@item.events.Location</td>
+		<td>@((item.NumberOfTickets).ToString())</td>
+					<td>
+						<div class="col text-end pt-1">
+							<a asp-area="Customer" asp-controller="Home" asp-action="DeleteBooking" asp-route-BookingId="@item.BookingId" class="btn btn-outline-primary"> Cancel</a>
+						</div>
+					</td>
+		
+		
+		</tr>
+		}
+		</tbody>
+	</table>

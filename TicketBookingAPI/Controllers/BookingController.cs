@@ -8,6 +8,8 @@ using TB.DataAccess.Models;
 using TB.DataAccess.Repository.IRepository;
 using Azure;
 using TB.DataAccess.Repository;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace TicketBookingAPI.Controllers
 {
@@ -72,7 +74,7 @@ namespace TicketBookingAPI.Controllers
                 }
 
             
-                var booking = await _unitOfWork.Booking.GetAsync(u => u.EventId == id, includeProperties: "events");
+                var booking = await _unitOfWork.Booking.GetAsync(u => u.BookingId == id, includeProperties: "events");
                 if (booking == null)
                 {
                     _response.IsSuccess = false;
@@ -129,9 +131,10 @@ namespace TicketBookingAPI.Controllers
             return _response;
         }
 
-      
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<APIResponse>> UpdateEvent(int id, [FromBody] Booking updateDTO)
+
+        public async Task<ActionResult<APIResponse>> UpdateBooking(int id, [FromBody] Booking updateDTO)
         {
             try
             {
@@ -141,9 +144,9 @@ namespace TicketBookingAPI.Controllers
                     return BadRequest();
                 }
               
-                if (await _unitOfWork.Booking.GetAsync(u => u.EventId == updateDTO.EventId) == null)
+                if (await _unitOfWork.Booking.GetAsync(u => u.BookingId == updateDTO.BookingId) == null)
                 {
-                    ModelState.AddModelError("ErrorMessages", "EventId is invalid");
+                    ModelState.AddModelError("ErrorMessages", "BookingId is invalid");
                     return BadRequest(ModelState);
                 }
 
@@ -169,13 +172,13 @@ namespace TicketBookingAPI.Controllers
 		{
 			try
 			{
+                //if (await _unitOfWork.ApplicationUser.GetAsync(u => u.Email == createDTO.Name) == null)
+                //{
+                //    ModelState.AddModelError("ErrorMessages", "Name is invalid");
+                //    return BadRequest(ModelState);
+                //}
 
-                if (await _unitOfWork.Booking.GetAsync(u => u.CustomerName == createDTO.CustomerName) != null)
-                {
-                    ModelState.AddModelError("ErrorMessages", "Customername already taken");
-                    return BadRequest(ModelState);
-                }
-
+                
                 if (createDTO == null)
 				{
 					return BadRequest();
@@ -191,13 +194,16 @@ namespace TicketBookingAPI.Controllers
                 int updatedone = available - createDTO.NumberOfTickets;
                 if (updatedone < 0) {
                     ModelState.AddModelError("ErrorMessages", "Insufficient tickets");
+                    
                     return BadRequest(ModelState);
-                    //some exception
+                   
                 }
                 eventtoupdate.AvailableSeats = updatedone;
                await _unitOfWork.Event.UpdateAsync(eventtoupdate);
+                
+
                 //save event
-				Booking booking = _mapper.Map<Booking>(createDTO);
+                Booking booking = _mapper.Map<Booking>(createDTO);
 
 				await _unitOfWork.Booking.CreateAsync(booking);
 

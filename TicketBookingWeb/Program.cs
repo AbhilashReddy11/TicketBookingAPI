@@ -30,7 +30,9 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddHttpClient<IBookingService, BookingService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IEventRepository, EventRepository>(); 
+builder.Services.AddHttpClient<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
 builder.Services.AddScoped<CountdownViewComponent>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddRazorPages();

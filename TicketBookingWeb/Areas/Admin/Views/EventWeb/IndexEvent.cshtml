@@ -43,6 +43,7 @@
 			@foreach (var item in Model)
 			{
 				<tr>
+					<td>@item.EventName</td>
 					
 					<td>@item.EventName</td>
 					<td>@item.EventDescription</td>
@@ -57,9 +58,9 @@
 					</td>
 				</tr>
 			}
-		</tbody>
+		</tbody>*@
 	</table>
-*@
+
 </div>
 @section Scripts{
 	<script src="~/js/event.js"></script>

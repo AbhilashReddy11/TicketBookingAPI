@@ -12,8 +12,8 @@ using TB.DataAccess.Data;
 namespace TB.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230531101651_AddedStatusinEvent")]
-    partial class AddedStatusinEvent
+    [Migration("20230605103537_all")]
+    partial class all
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,12 +242,11 @@ namespace TB.DataAccess.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("EventId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("int");
@@ -270,7 +269,7 @@ namespace TB.DataAccess.Migrations
                     b.Property<int>("AvailableSeats")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EventDate")
+                    b.Property<DateTime?>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EventDescription")

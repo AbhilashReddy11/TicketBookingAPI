@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Azure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -54,69 +57,13 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
         {
             return View();
         }
+  
+
+
+
+
+
         [HttpGet]
-
-
-
-
-
-        [Authorize]
-
-
-        public async Task<IActionResult> CreateVBooking()
-        {
-            BookingCreateVM bookingCreateVM = new();
-            var response = await _eventService.GetAllTrueAsync<APIResponse>();
-            if (response != null && response.IsSuccess)
-            {
-                bookingCreateVM.EventList = JsonConvert.DeserializeObject<List<Event>>
-                    (Convert.ToString(response.Result)).Select(i => new SelectListItem
-                    {
-                        Text = i.EventName,
-                        Value = i.EventId.ToString()
-                    });
-            }
-
-            return View(bookingCreateVM);
-        }
-     
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> CreateVBooking(BookingCreateVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var response = await _bookingService.CreateAsync<APIResponse>(model.booking);
-                if (response != null && response.IsSuccess)
-                {
-                    TempData["success"] = " Ticked booked";
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    if (response.ErrorMessages.Count > 0)
-                    {
-                        ModelState.AddModelError("ErrorMessages", response.ErrorMessages.FirstOrDefault());
-                    }
-                }
-            }
-
-            var resp = await _eventService.GetAllAsync<APIResponse>();
-            if (resp != null && resp.IsSuccess)
-            {
-                model.EventList = JsonConvert.DeserializeObject<List<Event>>
-                    (Convert.ToString(resp.Result)).Select(i => new SelectListItem
-                    {
-                        Text = i.EventName,
-                        Value = i.EventId.ToString()
-                    });
-            }
-            
-
-            return View(model);
-        }
         public async Task<IActionResult> Details(int EventId)
         {
             var response = await _eventService.GetAsync<APIResponse>(EventId);
@@ -128,7 +75,97 @@ namespace TicketBookingWeb.Areas.Customers.Controllers
             }
             return NotFound();
         }
-		
+        [Authorize]
+        public async Task<IActionResult> CreateBooking(int eventId)
+        {
+           
+            TempData["EventId"] = eventId;
+            return View();
 
-	}
+        }
+        public async Task<IActionResult> Book(BookingCreateDTO createDTO)
+        {
+           
+            createDTO.EventId = Convert.ToInt32(TempData["EventId"]);
+
+            createDTO.Name = User.Identity.Name;
+
+            var eventlst = await _eventService.GetAsync<APIResponse>(createDTO.EventId);
+           
+
+                Event evntlst = JsonConvert.DeserializeObject<Event>(Convert.ToString(eventlst.Result));
+
+
+            if (createDTO.NumberOfTickets > evntlst.AvailableSeats)
+            {
+                TempData["Error"] = "Not enough Tickets";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+
+                await _bookingService.CreateAsync<APIResponse>(createDTO);
+
+
+                TempData["success"] = "Ticket booked successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            
+            
+        }
+
+
+        public async Task<IActionResult> MyTicket()
+        {
+            List<Booking> list = new();
+
+
+            var response = await _bookingService.GetAllAsync<APIResponse>();
+
+            if (response != null)
+            {
+                list = JsonConvert.DeserializeObject<List<Booking>>(Convert.ToString(response.Result));
+
+            }
+
+            List<Booking> myTickets = new List<Booking>();
+           
+            string UserName = User.Identity.Name;
+            var list1 = list.Where(u => u.Name == UserName);
+           
+
+            return View(list1);
+
+        }
+        public async Task<ActionResult<APIResponse>> DeleteBooking(int BookingId)
+
+        {
+			
+
+			var bookinglist = await _bookingService.GetAsync<APIResponse>(BookingId);
+
+
+            Booking bookinglst = JsonConvert.DeserializeObject<Booking>(Convert.ToString(bookinglist.Result));
+            TimeSpan timeDifference = (TimeSpan)(bookinglst.events.EventDate - DateTime.UtcNow);
+
+           
+            if (timeDifference.TotalDays > 2)
+            {
+
+                var response = await _bookingService.DeleteAsync<APIResponse>(BookingId);
+
+                TempData["success"] = " deleted  successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["Error"] = " You can't Cancel your ticket before a day ";
+                return RedirectToAction(nameof(Index));
+
+            }
+
+        }
+
+
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
@@ -91,16 +92,16 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteEvent(int EventId)
-        {
+    
+        //public async Task<ActionResult<APIResponse>> DeleteEvent(int EventId)
+        //{
 
-            var response = await _eventService.DeleteAsync<APIResponse>(EventId);
+        //    var response = await _eventService.DeleteAsync<APIResponse>(EventId);
 
-            TempData["success"] = " deleted  successfully";
-            return RedirectToAction(nameof(IndexEvent));
+        //    TempData["success"] = " deleted  successfully";
+        //    return RedirectToAction(nameof(IndexEvent));
 
-        }
+        //}
         #region API CALLS
 
         [HttpGet]
@@ -117,23 +118,24 @@ namespace TicketBookingWeb.Areas.Admin.Controllers
             return Json(new { data = list });
         }
 
-		
-		//[HttpDelete]
-		//public async Task<IActionResult> DeleteEvent(int EventId)
-		//{
 
-			
-		//	var Abc = await _eventService.DeleteAsync<APIResponse>(EventId);
-
-		//	TempData["success"] = " deleted  successfully";
-		//	return RedirectToAction(nameof(IndexEvent));
-
-		//}
+	
+		public async Task<ActionResult<APIResponse>> DeleteEvent(int EventId)
+        {
+            
 
 
-		#endregion
+            var response = await _eventService.DeleteAsync<APIResponse>(EventId);
 
-	}
+            TempData["success"] = " deleted  successfully";
+            return RedirectToAction(nameof(IndexEvent));
+
+        }
+
+
+        #endregion
+
+    }
 }
 
 

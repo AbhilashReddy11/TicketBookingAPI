@@ -239,12 +239,11 @@ namespace TB.DataAccess.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("EventId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("int");
@@ -254,6 +253,26 @@ namespace TB.DataAccess.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("TB.DataAccess.Models.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Phonenumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("TB.DataAccess.Models.Event", b =>
@@ -267,7 +286,7 @@ namespace TB.DataAccess.Migrations
                     b.Property<int>("AvailableSeats")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EventDate")
+                    b.Property<DateTime?>("EventDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EventDescription")
@@ -276,11 +295,13 @@ namespace TB.DataAccess.Migrations
 
                     b.Property<string>("EventName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<double>("TicketPrice")
                         .HasColumnType("float");

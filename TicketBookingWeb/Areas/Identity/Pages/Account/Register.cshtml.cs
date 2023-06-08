@@ -107,7 +107,8 @@ namespace TicketBookingWeb.Areas.Identity.Pages.Account
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
-        }
+			public string? Name { get; set; }
+		}
 
 
         public async Task OnGetAsync(string returnUrl = null)

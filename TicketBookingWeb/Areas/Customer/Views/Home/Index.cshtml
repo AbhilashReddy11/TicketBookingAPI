@@ -11,6 +11,7 @@
                             <div class="">
                                 <p class="text-center text-lg text-uppercase font-bold text-lg text-primary" style="font-size: 1.5rem;">@events.EventName</p>
                                 <p class="">by <b>@events.EventDate</b></p>
+                            <p class="">Tickets available <b>@events.AvailableSeats</b></p>
                            
                             </div>
                             <div class="">
@@ -22,8 +23,11 @@
                                 </p>
                             </div>
 
-                        <div class="">
+                       @* <div class="">
                             <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-EventId="@events.EventId" class="btn btn-outline-primary"> Details</a>
+                        </div>*@
+                        <div class="">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="CreateBooking" asp-route-EventId="@events.EventId" class="btn btn-outline-primary"> Book</a>
                         </div>
                     </div>
                 </div>
@@ -32,11 +36,6 @@
         </div>
     }
 </div>
-<div style="z-index: 1; position: absolute; bottom: 0; left: 0; right: 0; width: 100%; display: flex; justify-content:space-between; padding: 1rem; padding-bottom: 2rem;">
-        <div class="col text-end pt-1">
+<div style="z-index: 1; position: absolute; bottom: 0; left: 0; right: 0; width: 100%; display: flex; justify-content:center; padding: 1rem; padding-bottom: 2rem;">
             @await Component.InvokeAsync("Countdown")
-        </div>
-        <div class="col text-end pt-1">
-            <a asp-area="Customer" asp-controller="Home" asp-action="CreateVBooking" class="btn btn-outline-primary btn-lg"> BookTickets</a>
-        </div>
 </div>

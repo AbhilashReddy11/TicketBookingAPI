@@ -16,14 +16,15 @@ namespace TicketBookingAPI
 
            
             CreateMap<Booking, BookingCreateDTO>().ReverseMap();
-            
+            CreateMap<Employee, EmployeeDTO>().ReverseMap();
 
-            
-           
-           
 
-          
-          
+
+
+
+
+
+
 
         }
     }

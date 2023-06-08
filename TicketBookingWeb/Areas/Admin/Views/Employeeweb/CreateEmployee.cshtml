@@ -1,0 +1,40 @@
+﻿@model TB.DataAccess.Models.DTO.EmployeeDTO
+<form asp-action="CreateEmployee">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Create Employee</h1>
+        <hr />
+
+        <div class="row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-2">
+                <label asp-for="EmployeeName" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="EmployeeName" class="form-control" />
+                <span asp-validation-for="EmployeeName" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Phonenumber" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Phonenumber" class="form-control" />
+                <span asp-validation-for="Phonenumber" class="text-danger"></span>
+            </div>
+
+          
+           
+
+           
+            <div class="col-5 offset-2">
+                <a asp-action="Index" asp-controller="Employeeweb" class="btn-primary btn form-control ">Back to List</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Create" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+

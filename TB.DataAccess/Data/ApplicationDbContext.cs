@@ -17,7 +17,9 @@ namespace TB.DataAccess.Data
         public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

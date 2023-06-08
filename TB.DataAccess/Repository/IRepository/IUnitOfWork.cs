@@ -5,7 +5,10 @@
         IUserRepository User { get; }
         IEventRepository Event { get; }
         IBookingRepository Booking { get; }
-        
+        IApplicationUserRepository ApplicationUser { get; }
+        IEmployeeRepository Employee { get; }
+
+
 
     }
 }
